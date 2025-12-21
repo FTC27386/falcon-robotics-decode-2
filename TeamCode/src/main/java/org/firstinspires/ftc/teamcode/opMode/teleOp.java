@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.opMode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
@@ -43,7 +45,7 @@ public class teleOp extends CommandOpMode {
 
     @Override
     public void initialize() {
-
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         super.reset();
         r = new Robot(hardwareMap);
         register(r.getS(), r.getD(), r.getI(), r.getL());
@@ -54,7 +56,6 @@ public class teleOp extends CommandOpMode {
         r.getD().setDefaultCommand(new defaultDrive(r, leftY, leftX, rightX));
         Paths paths = new Paths(r.getD().follower);
         PathsMirrored mirroredPaths = new PathsMirrored(r.getD().follower);
-
 
         intake = driverOp.getGamepadButton(GamepadKeys.Button.SQUARE);
         outtake = driverOp.getGamepadButton(GamepadKeys.Button.CIRCLE);

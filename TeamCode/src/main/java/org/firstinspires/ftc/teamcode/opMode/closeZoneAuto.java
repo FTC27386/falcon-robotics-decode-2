@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.Mechanisms.Commands.autoCloseShot;
 import org.firstinspires.ftc.teamcode.Mechanisms.Commands.runIntake;
 import org.firstinspires.ftc.teamcode.Mechanisms.Commands.stopIntake;
 import org.firstinspires.ftc.teamcode.Mechanisms.Paths;
-import org.firstinspires.ftc.teamcode.Mechanisms.PathsFaulty;
 import org.firstinspires.ftc.teamcode.Mechanisms.Robot;
 import org.firstinspires.ftc.teamcode.Utility.RobotConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;

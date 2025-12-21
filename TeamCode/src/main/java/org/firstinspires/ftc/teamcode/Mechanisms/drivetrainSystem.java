@@ -20,18 +20,16 @@ import java.util.function.Supplier;
 public class drivetrainSystem extends SubsystemBase {
     public static Pose
             currentPose = new Pose(0, 0, Math.toRadians(90)),
+            calculatedPose,
             startPose,
             targ;
     public Follower follower;
-    public Vector vel;
+
     public double
             x,
             distanceX,
             y,
             distanceY,
-            dist,
-            vx,
-            vy,
             heading,
             unnormalizedHeading,
             field_angle,
@@ -54,14 +52,14 @@ public class drivetrainSystem extends SubsystemBase {
     public void periodic() {
         follower.update();
         currentPose = follower.getPose();
-        x = currentPose.getX();
-        y = currentPose.getY();
-        heading = currentPose.getHeading();
+        calculatedPose = getPredictedPose(1);
+        x = calculatedPose.getX();
+        y = calculatedPose.getY();
+        heading = calculatedPose.getHeading();
         distanceX = targ.getX() - x;
         distanceY = targ.getY() - y;
         unnormalizedHeading = follower.getTotalHeading();
     }
-
     public double yoCalcDist() {
         return Math.hypot(distanceX, distanceY);
     }
@@ -113,28 +111,11 @@ public class drivetrainSystem extends SubsystemBase {
     }
 
     public void teleOpDrive(double axial, double lateral, double yaw) {
-
         follower.setTeleOpDrive(
                 -axial,
                 -lateral,
                 -yaw,
                 true);
-    }
-
-    public Vector prediction() {
-        vel = follower.getVelocity();
-        vx = vel.getXComponent();
-        vy = vel.getYComponent();
-
-        // 1. Calculate the 'Approach Velocity' (Closing speed toward goal)
-        // This is the Y-component in a goal-centric frame
-        double relVelY = (vx * distanceX + vy * distanceY) / dist;
-
-        // 2. Calculate the 'Lateral Velocity' (Sideways movement relative to goal)
-        // This is the X-component in a goal-centric frame
-        double relVelX = (vy * distanceX - vx * distanceY) / dist;
-
-        return new Vector(relVelX, relVelY);
     }
 
     public Pose getPredictedPose(double secondsInFuture) {
@@ -150,7 +131,7 @@ public class drivetrainSystem extends SubsystemBase {
         return new Pose(
                 currentPose.getX() + deltaX,
                 currentPose.getY() + deltaY,
-                currentPose.getHeading() // Note: Heading might also change!
+                currentPose.getHeading() // Heading could change
         );
     }
 
