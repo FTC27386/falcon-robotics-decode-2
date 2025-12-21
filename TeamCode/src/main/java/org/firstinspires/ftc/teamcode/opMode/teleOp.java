@@ -88,6 +88,12 @@ public class teleOp extends CommandOpMode {
     public void run() {
         telemetry.addData("x:", r.getD().x);
         telemetry.addData("y:", r.getD().y);
+        telemetry.addData("Act x:", r.getD().act_x);
+        telemetry.addData("Act y:", r.getD().act_y);
+        telemetry.addData("Distance", r.getD().yoCalcDist());
+        telemetry.addData("Actual Distance", r.getD().yoCalcActDist());
+        telemetry.addData("target X", r.getD().getTarg().getX());
+        telemetry.addData("target Y", r.getD().getTarg().getY());
         telemetry.addData("heading", r.getD().getCurrentPose().getHeading());
         telemetry.addData("adjustment", r.getD().yoCalcAim());
         telemetry.addData("flywheel target velocity", r.getS().getSpeedControl().getSetPoint());
@@ -98,9 +104,6 @@ public class teleOp extends CommandOpMode {
         telemetry.addData("turret ticks", r.getS().getTurretPosition());
         telemetry.addData("lift power", r.getL().getPIDResponse());
         telemetry.addData("lift pose", r.getL().getLiftPose());
-        telemetry.addData("Distance", r.getD().yoCalcDist());
-        telemetry.addData("target X", r.getD().getTarg().getX());
-        telemetry.addData("target Y", r.getD().getTarg().getY());
         telemetry.addData("In zone", r.getD().inZone());
         telemetry.addData("alliance color?", RobotConstants.current_color);
 

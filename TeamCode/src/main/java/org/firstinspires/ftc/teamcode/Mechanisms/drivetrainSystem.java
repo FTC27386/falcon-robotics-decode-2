@@ -56,8 +56,15 @@ public class drivetrainSystem extends SubsystemBase {
     public void periodic() {
         follower.update();
         currentPose = follower.getPose();
-        calculatedPose = getPredictedPose(0.1);
+        calculatedPose = getPredictedPose(0.5);
 
+        x = currentPose.getX();
+        y = currentPose.getY();
+
+        distanceX = targ.getX() - x;
+        distanceY = targ.getY() - y;
+
+        /*
         x = calculatedPose.getX();
         y = calculatedPose.getY();
 
@@ -69,6 +76,7 @@ public class drivetrainSystem extends SubsystemBase {
 
         act_distanceX = targ.getX() - act_x;
         act_distanceY = targ.getY() - act_y;
+         */
 
         heading = currentPose.getHeading();
         unnormalizedHeading = follower.getTotalHeading();
@@ -76,7 +84,7 @@ public class drivetrainSystem extends SubsystemBase {
     public double yoCalcDist() {
         return Math.hypot(distanceX, distanceY);
     }
-
+    public double yoCalcActDist() { return Math.hypot(act_distanceX, act_distanceY); }
     public double yoCalcAim()  //calculate adjusted turret angle in degrees
     {
         field_angle = (90 - Math.toDegrees(Math.atan2(distanceY, distanceX)));
@@ -142,8 +150,8 @@ public class drivetrainSystem extends SubsystemBase {
 
         // 3. Return the predicted position
         return new Pose(
-                currentPose.getX() - deltaX,
-                currentPose.getY() - deltaY,
+                currentPose.getX() + deltaX,
+                currentPose.getY() + deltaY,
                 currentPose.getHeading() // Heading could change
         );
     }
