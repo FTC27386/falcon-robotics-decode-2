@@ -27,13 +27,17 @@ public class drivetrainSystem extends SubsystemBase {
 
     public double
             x,
-            distanceX,
             y,
+            distanceX,
             distanceY,
             heading,
             unnormalizedHeading,
             field_angle,
-            zoneBuffer = 7.5 * Math.sqrt(2);
+            zoneBuffer = 7.5 * Math.sqrt(2),
+            act_x,
+            act_y,
+            act_distanceX,
+            act_distanceY;
     public Supplier<Pose> poseSupplier = this::getCurrentPose;
     boolean robotCentricDrive = false;
 
@@ -52,12 +56,21 @@ public class drivetrainSystem extends SubsystemBase {
     public void periodic() {
         follower.update();
         currentPose = follower.getPose();
-        calculatedPose = getPredictedPose(1);
+        calculatedPose = getPredictedPose(0.1);
+
         x = calculatedPose.getX();
         y = calculatedPose.getY();
-        heading = calculatedPose.getHeading();
+
+        act_x = currentPose.getX();
+        act_y = currentPose.getY();
+
         distanceX = targ.getX() - x;
         distanceY = targ.getY() - y;
+
+        act_distanceX = targ.getX() - act_x;
+        act_distanceY = targ.getY() - act_y;
+
+        heading = currentPose.getHeading();
         unnormalizedHeading = follower.getTotalHeading();
     }
     public double yoCalcDist() {
@@ -129,8 +142,8 @@ public class drivetrainSystem extends SubsystemBase {
 
         // 3. Return the predicted position
         return new Pose(
-                currentPose.getX() + deltaX,
-                currentPose.getY() + deltaY,
+                currentPose.getX() - deltaX,
+                currentPose.getY() - deltaY,
                 currentPose.getHeading() // Heading could change
         );
     }
