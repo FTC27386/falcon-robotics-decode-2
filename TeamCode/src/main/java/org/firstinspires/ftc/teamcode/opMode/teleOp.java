@@ -10,9 +10,8 @@ import com.seattlesolvers.solverslib.command.button.Button;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
-import org.firstinspires.ftc.teamcode.Mechanisms.Commands.followPath;
-import org.firstinspires.ftc.teamcode.Mechanisms.Commands.goToClimbPose;
 import org.firstinspires.ftc.teamcode.Mechanisms.Commands.defaultDrive;
+import org.firstinspires.ftc.teamcode.Mechanisms.Commands.followPath;
 import org.firstinspires.ftc.teamcode.Mechanisms.Commands.liftoff;
 import org.firstinspires.ftc.teamcode.Mechanisms.Commands.magDump;
 import org.firstinspires.ftc.teamcode.Mechanisms.Commands.runIntakeReverseTimed;
@@ -28,6 +27,8 @@ import java.util.function.Supplier;
 @TeleOp(name = "TeleOp")
 public class teleOp extends CommandOpMode {
 
+    public static double hood_pos = 0;
+    public static double flywheel_speed = -1700;
     Button intake;
     Button relocalize;
     Button shoot;
@@ -36,11 +37,9 @@ public class teleOp extends CommandOpMode {
     GamepadEx driverOp;
     Button climb;
     Button park;
-    public static double hood_pos = 0;
-    public static double flywheel_speed = -1500;
-    private Robot r;
     Paths paths;
     PathsMirrored paths_mirrored;
+    private Robot r;
 
     @Override
     public void initialize() {
@@ -66,17 +65,17 @@ public class teleOp extends CommandOpMode {
         park = driverOp.getGamepadButton(GamepadKeys.Button.DPAD_UP);
 
         climb.whenPressed(new followPath(r,
-                RobotConstants.current_color == null || RobotConstants.current_color == RobotConstants.ALLIANCE_COLOR.RED?
+                RobotConstants.current_color == null || RobotConstants.current_color == RobotConstants.ALLIANCE_COLOR.RED ?
                         paths.park : mirroredPaths.park));
         intake.whenPressed(new runIntakeTimed(r, 2000));
         outtake.whenPressed(new runIntakeReverseTimed(r, 2000));
         relocalize.whenPressed(new InstantCommand(() -> r.getD().reloc(new Pose(8, 8, Math.toRadians(90)))));
         changeTarget.whenPressed(new InstantCommand(() -> r.getD().relocTarget(
-               new Pose(
-                       r.getD().getCurrentPose().getX() - 12
-                       ,r.getD().getCurrentPose().getY() + 12
-                       ,Math.toRadians(90)
-               ))));
+                new Pose(
+                        r.getD().getCurrentPose().getX() - 12
+                        , r.getD().getCurrentPose().getY() + 12
+                        , Math.toRadians(90)
+                ))));
         schedule(new InstantCommand(() -> r.getD().follower.startTeleOpDrive()));
         schedule(new RunCommand(() -> r.getS().setTurretPosition(r.getD().yoCalcAim())));
         schedule(new RunCommand(() -> r.getS().setHoodPosition(r.getD().yoCalcHood())));

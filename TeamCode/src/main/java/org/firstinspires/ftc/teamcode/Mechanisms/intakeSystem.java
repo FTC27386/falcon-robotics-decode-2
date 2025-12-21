@@ -32,8 +32,7 @@ public class intakeSystem extends SubsystemBase {
     public void toggle(boolean x) {
         if (x) {
             open();
-        }
-        else {
+        } else {
             close();
         }
     }

@@ -30,7 +30,6 @@ package org.firstinspires.ftc.teamcode.Utility;
 
 import static androidx.core.math.MathUtils.clamp;
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT;
-import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.valueOf;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -57,6 +56,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name = "MotorTest", group = "Robot")
 
 public class MotorTest extends OpMode {
+    public static double x;
+    public static double turretPosition = 0.5;
+    public static double servoOffset = 0;
     DcMotor flywheel1, flywheel2;
     Servo leftTurretServo, rightTurretServo;
     DcMotor frontLeftDrive,
@@ -67,9 +69,6 @@ public class MotorTest extends OpMode {
     Servo hood,
             blocker,
             pivot;
-    public static double x;
-    public static double turretPosition = 0.5;
-    public static double servoOffset = 0;
 
     @Override
     public void init() {
@@ -115,8 +114,8 @@ public class MotorTest extends OpMode {
 
     @Override
     public void loop() {
-        if (gamepad1.dpadUpWasPressed()) x+= 0.01;
-        if (gamepad1.dpadDownWasPressed()) x-= 0.01;
+        if (gamepad1.dpadUpWasPressed()) x += 0.01;
+        if (gamepad1.dpadDownWasPressed()) x -= 0.01;
         x = clamp(x, 0, 1);
         hood.setPosition(x);
         leftTurretServo.setPosition(turretPosition);

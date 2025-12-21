@@ -95,19 +95,19 @@ public class shooterSystem extends SubsystemBase {
         return speedControl.atSetPoint();
     }
 
-    public void setTurretPosition(double turretPositionAngle) //this will take an angle
-    {
-        double turretTicks = 0.5;
-        turretTicks += turretPositionAngle * RobotConstants.turret_conversion_factor_DEGREES;
-        this.turretPosition = turretTicks;
-    }
-
     public void setHoodPosition(double hoodPosition) {
         this.hoodPosition = hoodPosition;
     }
 
     public double getTurretPosition() {
         return turretPosition;
+    }
+
+    public void setTurretPosition(double turretPositionAngle) //this will take an angle
+    {
+        double turretTicks = 0.5;
+        turretTicks += turretPositionAngle * RobotConstants.turret_conversion_factor_DEGREES;
+        this.turretPosition = turretTicks;
     }
 
 }
