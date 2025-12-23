@@ -26,19 +26,20 @@ public class RobotConstants {
             right_lift_servo_name = "right_lift_servo";
     public static double
             servo_offset = 0,
-            shooterTolerance = 67,
+            shooterTolerance = 22,
             vera_coefficient = .4167,
+            TURRET_OFFSET_INCH = -0.63696,
 
     lift_kP = 0.001, //0.0003
             lift_kD = 0.0,
             lift_kF = 0.3,
-            shooter_kP = -0.02,
+            shooter_kP = -0.003,
             shooter_kD = 0.00000000,
-            shooter_kFF = 0,
-            shooter_kL = 0.0, //"lower limit" power
-            turret_kP = 0,
+            shooter_kFF = -0.00042,
+            shooter_kL = 0.07, //"lower limit" power
+            turret_kP = 0.018,
             turret_kD = 0.0,
-            turret_kL = 0,
+            turret_kL = 0.02,
             offset_between_servos = 0,
             turret_conversion_factor_DEGREES = (0.0015962441314554),
             turret_conversion_factor_RADIANS = (double) (1 / 5) * (double) (170 / 60) * (double) (1 / 355) * (360 / (2 * Math.PI)), // for mason's weird ahh

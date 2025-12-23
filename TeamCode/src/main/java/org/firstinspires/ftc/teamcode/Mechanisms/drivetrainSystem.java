@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.Mechanisms;
 
 import static org.firstinspires.ftc.teamcode.opMode.teleOp.flywheel_speed;
 import static org.firstinspires.ftc.teamcode.opMode.teleOp.hood_pos;
-import static java.lang.Math.sqrt;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
@@ -24,8 +23,9 @@ public class drivetrainSystem extends SubsystemBase {
             startPose,
             targ;
     public Follower follower;
-
+    public Pose turret_location;
     public double
+
             x,
             y,
             distanceX,
@@ -56,13 +56,14 @@ public class drivetrainSystem extends SubsystemBase {
     public void periodic() {
         follower.update();
         currentPose = follower.getPose();
+        turret_location = getTurretLocation();
         calculatedPose = getPredictedPose(0.1);
 
         x = calculatedPose.getX();
         y = calculatedPose.getY();
 
-        act_x = currentPose.getX();
-        act_y = currentPose.getY();
+        act_x = turret_location.getX();
+        act_y = turret_location.getY();
 
         distanceX = targ.getX() - x;
         distanceY = targ.getY() - y;
@@ -73,6 +74,12 @@ public class drivetrainSystem extends SubsystemBase {
         heading = currentPose.getHeading();
         unnormalizedHeading = follower.getTotalHeading();
     }
+    public Pose getTurretLocation()
+    {
+        double newX = currentPose.getX() + Math.cos(currentPose.getHeading()) * RobotConstants.TURRET_OFFSET_INCH;
+        double newY = currentPose.getY() + Math.sin(currentPose.getHeading()) * RobotConstants.TURRET_OFFSET_INCH;
+        return new Pose(newX, newY);
+    }
     public double yoCalcDist() {
         return Math.hypot(distanceX, distanceY);
     }
@@ -81,7 +88,7 @@ public class drivetrainSystem extends SubsystemBase {
     {
         field_angle = (90 - Math.toDegrees(Math.atan2(distanceY, distanceX)));
         // return Math.toDegrees((heading)-Math.PI/2) + field_angle;
-        return -UtilMethods.AngleDifference(Math.toDegrees(unnormalizedHeading), 0) + field_angle;
+        return UtilMethods.AngleDifference(Math.toDegrees(unnormalizedHeading), 0) + field_angle;
 
         //equivalent: Math.toDegrees(currentpose.getHeading() - Math.PI/2)
 
@@ -133,7 +140,7 @@ public class drivetrainSystem extends SubsystemBase {
 
     public Pose getPredictedPose(double secondsInFuture) {
         // 1. Get current state
-        Pose currentPose = follower.getPose();
+        Pose currentPose = getTurretLocation();
         Vector currentVel = follower.getVelocity(); // Field-centric velocity
 
         // 2. Calculate displacement (Velocity * Time)

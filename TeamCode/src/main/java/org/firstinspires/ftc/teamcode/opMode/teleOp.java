@@ -103,6 +103,7 @@ public class teleOp extends CommandOpMode {
         telemetry.addData("target Y", r.getD().getTarg().getY());
         telemetry.addData("In zone", r.getD().inZone());
         telemetry.addData("alliance color?", RobotConstants.current_color);
+        telemetry.addData("turret error", r.getS().error);
 
         telemetry.update();
         super.run();
