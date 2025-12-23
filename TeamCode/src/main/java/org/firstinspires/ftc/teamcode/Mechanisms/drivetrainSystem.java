@@ -40,6 +40,7 @@ public class drivetrainSystem extends SubsystemBase {
             act_distanceY;
     public Supplier<Pose> poseSupplier = this::getCurrentPose;
     boolean robotCentricDrive = false;
+    public Pose realTurretPose;
 
     public drivetrainSystem(HardwareMap hMap) {
         follower = Constants.createFollower(hMap);
@@ -56,13 +57,14 @@ public class drivetrainSystem extends SubsystemBase {
     public void periodic() {
         follower.update();
         currentPose = follower.getPose();
+        realTurretPose = computeOffset(currentPose, RobotConstants.TURRET_OFFSET_INCH);
         calculatedPose = getPredictedPose(0.5);
 
         x = currentPose.getX();
         y = currentPose.getY();
 
-        distanceX = targ.getX() - x;
-        distanceY = targ.getY() - y;
+        distanceX = targ.getX() - realTurretPose.getX();
+        distanceY = targ.getY() - realTurretPose.getY();
 
         /*
         x = calculatedPose.getX();
@@ -174,5 +176,12 @@ public class drivetrainSystem extends SubsystemBase {
 
     public boolean inZone() {
         return (y > Math.abs(x - 72) + 72 - zoneBuffer) || (y < -Math.abs(x - 72) + 24 + zoneBuffer);
+    }
+    public Pose computeOffset(Pose pose, double Offset)
+    {
+        double heading = pose.getHeading();
+        double NewX = pose.getX() + Math.cos(heading) * Offset;
+        double NewY = pose.getY() + Math.sin(heading) * Offset;
+        return new Pose(NewX, NewY);
     }
 }
